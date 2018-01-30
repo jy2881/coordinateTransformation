@@ -44,16 +44,17 @@ def SRCStoGCS(X, Y, Z, a, b):
 
 def bursa(deltaX,deltaY,deltaZ,rX,rY,rZ,m,x1,y1,z1):
     m = m*1e-6
-    rX, rY, rZ = rX/3600.0, rY/3600.0, rZ/3600.0
-    out=(1+m)*np.dot(np.array([[1,rZ,-rY],[-rZ,1,rX],[rY,-rX,1]]),np.array([[x1,y1,z1]]).reshape(3,1))+np.array([[deltaX,deltaY,deltaZ]]).reshape(3,1)
+    rX, rY, rZ = rX/3600.0, rY/3600.0, rZ/1296000
+    out=(1+m)*np.dot(np.array([[1.0,rZ,-rY],[-rZ,1.0,rX],[rY,-rX,1.0]]),np.array([[x1,y1,z1]]).reshape(3,1))+np.array([[deltaX,deltaY,deltaZ]]).reshape(3,1)
     return out
 
 # ---------------------------- transform from beijing to wgs (coordinate frame) -----------------------
 # beijing_1954 to wgs_1984 after function: (4972946.05158608, 1120639.60857762, 3820602.7375601)
-print(bursa(31.4, -144.3, -74.8, 0.0, 0.0, 0.814, -0.38, 4972662.865269649, 1121908.7088013135, 3820678.989418116))
+#  4972691.6710024, 1121767.10573683, 3820602.7375601
+print(bursa(31.4, -144.3, -74.8, 0.0, 0.0, -0.814, -0.38, 4972662.865269649, 1121908.7088013135, 3820678.989418116))
 
 # result to GCS: (116.35142392567941, 39.89608461627541, 60.736785356886685)
-print(SRCStoGCS(4972947.75232353, 1120639.99188586, 3820604.04423231, 6378137, 6356752.3142451793))
+print(SRCStoGCS(4972691.6710024, 1121767.10573683, 3820602.7375601, 6378137, 6356752.3142451793))
 
 # ---------------------------- transform from wgs to beijing (coordinate frame)-----------------------
 # # wgs_1984 to beijing_1954 after function: (4972847.19234003, 1120627.08201484, 3820553.26783673)
