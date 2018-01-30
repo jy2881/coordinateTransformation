@@ -4,6 +4,7 @@ __author__ = 'Jy2881'
 import numpy as np
 import math
 
+# 从地理坐标系（GCS）到空间直角坐标系
 def GCStoSRCS(B, L, a, b):
     e = math.sqrt((a**2-b**2)/a**2)
     # divided by 180 degree
@@ -16,6 +17,7 @@ def GCStoSRCS(B, L, a, b):
     Z = N*(1-e**2)*math.sin(B)
     return X, Y, Z
 
+# 从空间直角坐标系到地理坐标系（GCS）
 def SRCStoGCS(X, Y, Z, a, b):
     theta = math.atan((a*Z)/(b*math.sqrt(X**2+Y**2)))
     eS = math.sqrt((a**2-b**2)/b**2)
@@ -30,6 +32,7 @@ def SRCStoGCS(X, Y, Z, a, b):
     L = L*180
     return B, L, H
 
+# 下面记录了一些控制点在两个坐标系下的空间直角坐标系的坐标值
 ## srcs of wgs_1984: (4972564.008823484, 1121896.1598812349, 3820629.5196759496)
 # print(GCStoSRCS(116.353671, 39.942335, 6378137, 6356752.3142451793))
 # print(SRCStoGCS(4972564.008823484, 1121896.1598812349, 3820629.5196759496, 6378137, 6356752.3142451793))
@@ -42,12 +45,14 @@ def SRCStoGCS(X, Y, Z, a, b):
 # print(GCStoSRCS(116.340106, 39.944159, 6378388, 6356911.9461279465))
 # print(SRCStoGCS(4973055.450426054, 1122059.9965219735, 3820308.1743461723, 6378388, 6356911.9461279465))
 
+# 基于布尔莎的正算公式
 def bursa(deltaX,deltaY,deltaZ,rX,rY,rZ,m,x1,y1,z1):
     m = m*1e-6
     rX, rY, rZ = rX/3600.0, rY/3600.0, rZ/1296000
     out=(1+m)*np.dot(np.array([[1.0,rZ,-rY],[-rZ,1.0,rX],[rY,-rX,1.0]]),np.array([[x1,y1,z1]]).reshape(3,1))+np.array([[deltaX,deltaY,deltaZ]]).reshape(3,1)
     return out
 
+# 下面是正算公式的测试过程
 # ---------------------------- transform from beijing to wgs (coordinate frame) -----------------------
 # beijing_1954 to wgs_1984 after function: (4972946.05158608, 1120639.60857762, 3820602.7375601)
 #  4972691.6710024, 1121767.10573683, 3820602.7375601
